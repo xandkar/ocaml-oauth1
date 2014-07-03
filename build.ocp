@@ -1,0 +1,31 @@
+sort     = true
+has_byte = true
+has_asm  = false
+cflags   = [ "-w +A" ]
+
+begin library "oauth"
+    files =
+    [
+        "src/oauth/client.mli"
+        "src/oauth/client.ml"
+        "src/oauth/credentials.ml"
+        "src/oauth/http_request.mli"
+        "src/oauth/http_request.ml"
+        "src/oauth/nonce.mli"
+        "src/oauth/nonce.ml"
+        "src/oauth/owner.mli"
+        "src/oauth/owner.ml"
+        "src/oauth/resource.mli"
+        "src/oauth/resource.ml"
+        "src/oauth/server.mli"
+        "src/oauth/server.ml"
+        "src/oauth/signature.mli"
+        "src/oauth/signature.ml"
+        "src/oauth/timestamp.mli"
+        "src/oauth/timestamp.ml"
+        "src/oauth/uri.mli"
+        "src/oauth/uri.ml"
+        "src/oauth/utils.mli"
+        "src/oauth/utils.ml"
+    ]
+end
