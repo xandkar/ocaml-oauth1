@@ -1,8 +1,15 @@
-type path = string
-
-type query = string
-
 type t =
-  { path  : path
-  ; query : query
+  { scheme : string
+  ; host   : string
+  ; port   : int
+  ; path   : string
   }
+
+type parsing_error =
+  | Parsing_error
+
+let of_string s =
+  Utils.not_implemented ()
+
+let to_string _ =
+  Utils.not_implemented ()

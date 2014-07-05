@@ -8,14 +8,24 @@ module Method = struct
     | HMAC_SHA1 -> "HMAC_SHA1"
 end
 
+module Base_string_uri : sig
+  type t = string
+
+  val cons : scheme:string -> host:string -> port:int -> path:string -> t
+end = struct
+  type t = string
+
+  let cons ~scheme ~host ~port ~path =
+    Utils.not_implemented ()
+end
+
 module Base_string :sig
   type t = private string
 
   val cons
     : http_req_method    : Http_request.Method.t
    -> http_req_host      : Http_request.Host.t
-   -> resource_uri_path  : Resource.path
-   -> resource_uri_query : Resource.query
+   -> resource_uri       : Resource.uri
    -> resource_realm     : Resource.realm
    -> consumer_key       : Credentials.Client.id
    -> signature_method   : Method.t
@@ -28,15 +38,27 @@ end = struct
   let cons
     ~http_req_method
     ~http_req_host
-    ~resource_uri_path
-    ~resource_uri_query
+    ~resource_uri
     ~resource_realm
     ~consumer_key
     ~signature_method
     ~timestamp
     ~nonce
     =
-    Utils.not_implemented ()
+    let meth =
+      Utils.percent_encode (Http_request.Method.to_string http_req_method)
+    in
+    let uri =
+      let scheme = Utils.not_implemented () in
+      let host   = Utils.not_implemented () in
+      let port   = Utils.not_implemented () in
+      let path   = Utils.not_implemented () in
+      Base_string_uri.cons ~scheme ~host ~port ~path
+    in
+    let parameters =
+      Utils.not_implemented ()
+    in
+    meth ^ "&" ^ uri ^ "&" ^ parameters
 end
 
 module Key :sig
@@ -50,13 +72,24 @@ module Key :sig
                              ]
    -> t
 end = struct
-  type t = private string
+  type t = string
 
   let cons
     ~client_shared_secret
     ~token_shared_secret
     =
-    Utils.not_implemented ()
+    let client_shared_secret =
+      Credentials.Client.secret_to_string client_shared_secret
+    in
+    let token_shared_secret =
+      match token_shared_secret with
+      | `Client s -> Credentials.Client.secret_to_string s
+      | `Temp   s -> Credentials.Temp.secret_to_string s
+      | `Token  s -> Credentials.Token.secret_to_string s
+    in
+    (Utils.percent_encode client_shared_secret)
+    ^ "&" ^
+    (Utils.percent_encode token_shared_secret)
 end
 
 module Digest : sig
@@ -97,11 +130,27 @@ let cons
   ~meth
   ~http_req_method
   ~http_req_host
-  ~resource_uri_path
-  ~resource_uri_query
+  ~resource_uri
   ~resource_realm
   ~consumer_key
+  ~client_shared_secret
+  ~token_shared_secret
   ~timestamp
   ~nonce
   =
-  Utils.not_implemented ()
+  let key = Key.cons ~client_shared_secret ~token_shared_secret in
+  let text =
+    Base_string.cons
+      ~http_req_method
+      ~http_req_host
+      ~resource_uri
+      ~resource_realm
+      ~consumer_key
+      ~signature_method:meth
+      ~timestamp
+      ~nonce
+  in
+  let digest = Digest.cons ~meth ~key ~text in
+  { value = digest.Digest.value
+  ; meth  = digest.Digest.meth
+  }

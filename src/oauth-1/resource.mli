@@ -1,13 +1,12 @@
 type realm = private string
 
-type path = private Uri.path
-
-type query = private Uri.query
+type uri = private Uri.t
 
 type t = private
   { realm : realm
-  ; path  : path
-  ; query : query
+  ; uri   : uri
   }
 
 val cons : realm:string -> uri:Uri.t -> t
+
+val get_uri : t -> Uri.t

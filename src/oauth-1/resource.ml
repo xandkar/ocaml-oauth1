@@ -1,14 +1,14 @@
 type realm = string
 
-type path = Uri.path
-
-type query = Uri.query
+type uri = Uri.t
 
 type t = private
   { realm : realm
-  ; path  : path
-  ; query : query
+  ; uri   : uri
   }
 
 let cons ~realm ~uri =
   Utils.not_implemented ()
+
+let get_uri {uri} =
+  uri

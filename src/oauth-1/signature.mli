@@ -18,10 +18,14 @@ val cons
   : meth               : Method.t
  -> http_req_method    : Http_request.Method.t
  -> http_req_host      : Http_request.Host.t
- -> resource_uri_path  : Resource.path
- -> resource_uri_query : Resource.query
+ -> resource_uri       : Resource.uri
  -> resource_realm     : Resource.realm
  -> consumer_key       : Credentials.Client.id
+ -> client_shared_secret : Credentials.Client.secret
+ -> token_shared_secret  : [ `Client of Credentials.Client.secret
+                           | `Temp   of Credentials.Temp.secret
+                           | `Token  of Credentials.Token.secret
+                           ]
  -> timestamp          : Timestamp.t
  -> nonce              : Nonce.t
  -> t

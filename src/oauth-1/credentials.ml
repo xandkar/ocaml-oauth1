@@ -9,6 +9,8 @@ module Make (Unit : sig end) : sig
     }
 
   val generate : unit -> t
+
+  val secret_to_string : secret -> string
 end = struct
   type id = string
 
@@ -21,6 +23,9 @@ end = struct
 
   let generate () =
     Utils.not_implemented ()
+
+  let secret_to_string s =
+    s
 end
 
 module Client = Make (struct end)
