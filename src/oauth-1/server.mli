@@ -33,7 +33,7 @@ val initiate
  -> signature_method : Signature.Method.t
  -> timestamp        : Timestamp.t
  -> nonce            : Nonce.t
- -> callback         : Client.callback
+ -> callback         : Uri.t
  -> [ `Ok    of Credentials.Temp.t * callback_confirmed
     | `Error of Error.t
     ]
